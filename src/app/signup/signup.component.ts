@@ -20,32 +20,38 @@ export class SignupComponent implements OnInit {
     { name: 'Mexican', checked: false },
     { name: 'Pizza', checked: false }
   ];
+  errorMessage: string;
 
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
   }
+
   signup(credentials) {
     credentials.dietPreferences = this.getSelectedPreferences();
     this.authService.signup(credentials).subscribe(res => {
       console.log('res ', res);
-      //Redirect to user dashboard
+      // Redirect to user dashboard
+    }, err => {
+      this.errorMessage = err.error.message;
     });
   }
-  getSelectedPreferences(){
+
+  getSelectedPreferences() {
     return this.dietPreferences
-      .filter((preference)=> {
+      .filter((preference) => {
         if (preference.checked === true) { return preference; }
       })
       .map((preference) => {
         return preference.name;
       });
   }
+
   onPrefCheck(index) {
     if (this.dietPreferences[index].checked === true) {
       this.dietPreferences[index].checked = false;
     } else {
-      this.dietPreferences[index].checked = true;  
-      }
+      this.dietPreferences[index].checked = true;
+    }
   }
 }
